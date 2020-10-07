@@ -32,38 +32,47 @@ class Permalink extends React.Component<BaseProps> {
   }
 }
 
-const STYLES_CONTAINER = css`
+const STYLES_PERMALINK = css`
   position: relative;
-
-  .anchor-icon {
-    cursor: pointer;
-    position: absolute;
-    top: 8px;
-    width: 20px;
-    height: 20px;
-    visibility: hidden;
-  }
-
-  :hover {
-    .anchor-icon {
-      visibility: visible;
-    }
-  }
 `;
 
-const STYLES_CONTAINER_ANCHOR = css`
-  position: absolute;
-  top: 0;
-  left: -24px;
-  width: 20px;
-  height: 20px;
-`;
-
-const STYLES_CONTAINER_TARGET = css`
+const STYLES_PERMALINK_TARGET = css`
   display: block;
   position: absolute;
   top: -100px;
   visibility: hidden;
+`;
+
+const STYLES_PERMALINK_LINK = css`
+  text-decoration: inherit;
+  color: inherit;
+
+  /*
+  When permalink is used inside a collapsible element,
+  disable the anchor link and icon to allow the element to collapse when clicked.
+  */
+  details & {
+    pointer-events: none;
+  }
+`;
+
+const STYLES_PERMALINK_ICON = css`
+  cursor: pointer;
+  vertical-align: text-top;
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  padding: 0 0.2em;
+  visibility: hidden;
+
+  a:hover & {
+    visibility: visible;
+  }
+
+  svg {
+    width: 100%;
+    height: auto;
+  }
 `;
 
 /**
@@ -92,16 +101,14 @@ export default withHeadingManager<EnhancedProps>(props => {
 
   return (
     <Permalink component={component} data-components-heading>
-      <div css={STYLES_CONTAINER} ref={heading.ref}>
-        <span id={permalinkKey} css={STYLES_CONTAINER_TARGET} />
-        <a
-          style={props.customIconStyle}
-          href={'#' + permalinkKey}
-          className="permalink"
-          css={STYLES_CONTAINER_ANCHOR}>
-          <PermalinkIcon />
+      <div css={STYLES_PERMALINK} ref={heading.ref}>
+        <span css={STYLES_PERMALINK_TARGET} id={permalinkKey} />
+        <a css={STYLES_PERMALINK_LINK} href={'#' + permalinkKey}>
+          {children}
+          <span css={STYLES_PERMALINK_ICON} style={props.customIconStyle}>
+            <PermalinkIcon />
+          </span>
         </a>
-        <div className="permalink-child">{children}</div>
       </div>
     </Permalink>
   );
